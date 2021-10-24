@@ -22,17 +22,21 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import SneakerList from "./sneaker/SneakerList";
 import SneakerEdit from "./sneaker/SneakerEdit";
+import React from "react";
+import {SneakerProvider} from "./sneaker/SneakerProvider";
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/sneakers" component={SneakerList} exact={true} />
-        <Route path="/sneaker" component={SneakerEdit} exact={true} />
-        <Route path="/sneaker/:id" component={SneakerEdit} exact={true} />
-        <Route exact path="/" render={() => <Redirect to="/sneakers" />} />
-      </IonRouterOutlet>
-    </IonReactRouter>
+      <SneakerProvider>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route path="/sneakers" component={SneakerList} exact={true} />
+            <Route path="/sneaker" component={SneakerEdit} exact={true} />
+            <Route path="/sneaker/:id" component={SneakerEdit} exact={true} />
+            <Route exact path="/" render={() => <Redirect to="/sneakers" />} />
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </SneakerProvider>
   </IonApp>
 );
 

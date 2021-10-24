@@ -31,17 +31,19 @@ app.use(async (ctx, next) => {
 });
 
 class Sneaker {
-    constructor({ id, name, price, owned }) {
+    constructor({ id, name, price, owned, date, version }) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.owned = owned;
+        this.date = date;
+        this.version = version;
     }
 }
 
 const sneakers = [];
 for (let i = 0; i < 3; i++) {
-    sneakers.push(new Sneaker({ id: `${i}`, name: `sneaker ${i}`, price: i, owned: true }));
+    sneakers.push(new Sneaker({ id: `${i}`, name: `sneaker ${i}`, price: i, owned: true, date: new Date(Date.now() + i), version: 1  }));
 }
 let lastUpdated = sneakers[sneakers.length - 1].date;
 let lastId = sneakers[sneakers.length - 1].id;
@@ -62,7 +64,7 @@ router.get('/sneaker', ctx => {
         ctx.response.status = 304; // NOT MODIFIED
         return;
     }
-    const text = ctx.request.query.text;
+    const name = ctx.request.query.text;
     const page = parseInt(ctx.request.query.page) || 1;
     ctx.response.set('Last-Modified', lastUpdated.toUTCString());
     const sortedItems = sneakers
@@ -160,12 +162,12 @@ router.del('/sneaker/:id', ctx => {
 setInterval(() => {
     lastUpdated = new Date();
     lastId = `${parseInt(lastId) + 1}`;
-    const sneaker = new Sneaker({ id: lastId, name: `item ${lastId}`, price: 0, owned: true });
+    const sneaker = new Sneaker({ id: lastId, name: `sneaker ${lastId}`, price: 0, owned: true, date: lastUpdated, version: 1 });
     sneakers.push(sneaker);
     console.log(`
    ${sneaker.name}`);
     broadcast({ event: 'created', payload: { sneaker } });
-}, 150000);
+}, 15000);
 
 app.use(router.routes());
 app.use(router.allowedMethods());

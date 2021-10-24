@@ -50,7 +50,7 @@ interface MessageData {
 }
 
 export const newWebSocket = (onMessage: (data: MessageData) => void) => {
-    const webSocket = new WebSocket(`ws://${sneakerUrl}`)
+    const webSocket = new WebSocket(`ws://${serverURL}`)
     webSocket.onopen = () => {
         log('web socket onopen');
     };

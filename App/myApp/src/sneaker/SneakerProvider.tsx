@@ -8,7 +8,7 @@ const log = getLogger('SneakerProvider');
 
 type SaveSneakerFunction = (sneaker: Sneaker) => Promise<any>;
 
-export interface SneakerState {
+export interface SneakersState {
     sneakers?: Sneaker[],
     fetching: boolean,
     fetchingError?: Error | null,
@@ -22,7 +22,7 @@ interface ActionProps {
     payload?: any,
 }
 
-const initialState: SneakerState = {
+const initialState: SneakersState = {
     fetching: false,
     saving: false,
 };
@@ -34,7 +34,7 @@ const SAVE_SNEAKER_STARTED = 'SAVE_SNEAKER_STARTED';
 const SAVE_SNEAKER_SUCCEEDED = 'SAVE_SNEAKER_SUCCEEDED';
 const SAVE_SNEAKER_FAILED = 'SAVE_SNEAKER_FAILED';
 
-const reducer: (state: SneakerState, action: ActionProps) => SneakerState =
+const reducer: (state: SneakersState, action: ActionProps) => SneakersState =
     (state, {type, payload}) => {
         switch(type) {
             case FETCH_SNEAKERS_STARTED:
@@ -70,7 +70,7 @@ const reducer: (state: SneakerState, action: ActionProps) => SneakerState =
         }
     };
 
-export const SneakerContext = React.createContext<SneakerState>(initialState);
+export const SneakerContext = React.createContext<SneakersState>(initialState);
 
 interface SneakerProviderProps {
     children: PropTypes.ReactNodeLike,
@@ -94,8 +94,9 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
 
 
     function getSneakersEffect() {
+        log('effect started')
         let cancelled = false;
-        fetchSneakers().then(r => log(r));
+        fetchSneakers();
         return () => {
             cancelled = true;
         }
@@ -148,4 +149,4 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
             closeWebSocket();
         }
     }
-}
+};
