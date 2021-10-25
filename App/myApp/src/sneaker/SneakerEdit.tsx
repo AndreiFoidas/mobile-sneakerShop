@@ -14,6 +14,7 @@ import {
     IonTitle,
     IonToolbar
 } from "@ionic/react";
+import moment from 'moment';
 
 const log = getLogger('SneakerEdit');
 
@@ -76,6 +77,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
                 <IonLabel>Owned: </IonLabel>
                 <IonInput value={String(owned)} onIonChange={e => setOwned((e.detail.value) == "true" || (e.detail.value) == "yes")} />
                 <IonLabel>Release Date: </IonLabel>
+                <IonInput value = {String(moment(releaseDate).format('DD-MMM-YYYY HH:mm:ss'))}/>
                 {/*<IonInput value={String(releaseDate)} onIonChange={e => {
                         if (e.detail.value !== undefined && e.detail.value !== null) {
                             log(new Date(e.detail.value));
