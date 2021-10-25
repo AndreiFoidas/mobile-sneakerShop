@@ -31,11 +31,12 @@ app.use(async (ctx, next) => {
 });
 
 class Sneaker {
-    constructor({ id, name, price, owned, date, version }) {
+    constructor({ id, name, price, owned, releaseDate, date, version }) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.owned = owned;
+        this.releaseDate = releaseDate;
         this.date = date;
         this.version = version;
     }
@@ -43,7 +44,7 @@ class Sneaker {
 
 const sneakers = [];
 for (let i = 0; i < 3; i++) {
-    sneakers.push(new Sneaker({ id: `${i}`, name: `sneaker ${i}`, price: i, owned: true, date: new Date(Date.now() + i), version: 1  }));
+    sneakers.push(new Sneaker({ id: `${i}`, name: `sneaker ${i}`, price: i, owned: true, releaseDate: new Date(Date.now() + i), date: new Date(Date.now() + i), version: 1  }));
 }
 let lastUpdated = sneakers[sneakers.length - 1].date;
 let lastId = sneakers[sneakers.length - 1].id;
@@ -103,6 +104,9 @@ const createItem = async (ctx) => {
     lastId = sneaker.id;
     sneaker.price = 0;
     sneaker.owned = true;
+    sneaker.releaseDate = new Date();
+    sneaker.date = new Date();
+    sneaker.version = 1;
     sneakers.push(sneaker);
     ctx.response.body = sneaker;
     ctx.response.status = 201; // CREATED
@@ -116,7 +120,6 @@ router.post('/sneaker', async (ctx) => {
 router.put('/sneaker/:id', async (ctx) => {
     const id = ctx.params.id;
     const sneaker = ctx.request.body;
-    sneaker.price = 0;
     const sneakerId = sneaker.id;
     if (sneakerId && id !== sneaker.id) {
         ctx.response.body = { issue: [{ error: `Param id and body id should be the same` }] };
@@ -133,7 +136,7 @@ router.put('/sneaker/:id', async (ctx) => {
         ctx.response.status = 400; // BAD REQUEST
         return;
     }
-    const sneakerPrice = parseInt(ctx.request.get('ETag')) || sneaker.price;
+    //const sneakerPrice = parseInt(ctx.request.get('ETag')) || sneaker.price;
     //if (itemVersion < items[index].version) {
     //    ctx.response.body = { issue: [{ error: `Version conflict` }] };
     //    ctx.response.status = 409; // CONFLICT
@@ -162,12 +165,12 @@ router.del('/sneaker/:id', ctx => {
 setInterval(() => {
     lastUpdated = new Date();
     lastId = `${parseInt(lastId) + 1}`;
-    const sneaker = new Sneaker({ id: lastId, name: `sneaker ${lastId}`, price: 0, owned: true, date: lastUpdated, version: 1 });
+    const sneaker = new Sneaker({ id: lastId, name: `sneaker ${lastId}`, price: 0, owned: true, releaseDate: lastUpdated, date: lastUpdated, version: 1 });
     sneakers.push(sneaker);
     console.log(`
    ${sneaker.name}`);
     broadcast({ event: 'created', payload: { sneaker } });
-}, 15000);
+}, 150000);
 
 app.use(router.routes());
 app.use(router.allowedMethods());

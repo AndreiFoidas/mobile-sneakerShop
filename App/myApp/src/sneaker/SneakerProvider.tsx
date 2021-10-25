@@ -96,7 +96,7 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
     function getSneakersEffect() {
         log('effect started')
         let cancelled = false;
-        fetchSneakers();
+        fetchSneakers().then(r => log(r));
         return () => {
             cancelled = true;
         }
