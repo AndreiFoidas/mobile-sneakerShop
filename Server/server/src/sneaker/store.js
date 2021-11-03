@@ -15,8 +15,7 @@ export class SneakerStore {
 
     async insert(sneaker) {
         let sneakerName = sneaker.name;
-        let sneakerPrice = sneaker.price;
-        if (!sneakerPrice || !sneakerName) { // validation
+        if (!sneakerName) { // validation
             throw new Error('Missing properties')
         }
         return this.store.insert(sneaker);
