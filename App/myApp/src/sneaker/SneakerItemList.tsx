@@ -10,7 +10,7 @@ interface SneakerExt extends Sneaker{
 const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, price, owned, releaseDate, onEdit}) => {
     return (
       <IonItem onClick = {() => onEdit(_id)}>
-          <IonLabel>{_id} - {name}, {price}$, owned: {owned ? "yes" : "no"}, release date: {moment(releaseDate).format('DD-MMM-YYYY HH:mm:ss')}</IonLabel>
+          <IonLabel>{name}, {price}$, owned: {owned ? "yes" : "no"}, release date: {moment(releaseDate).format('DD-MMM-YYYY HH:mm:ss')}</IonLabel>
       </IonItem>
     );
 };

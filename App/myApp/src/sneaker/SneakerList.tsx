@@ -21,6 +21,7 @@ const log = getLogger('SneakerList');
 
 const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
     const {sneakers, fetching, fetchingError} = useContext(SneakerContext);
+    console.log(sneakers)
     return (
         <IonPage>
             <IonHeader>
@@ -32,8 +33,9 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
                 <IonLoading isOpen={fetching} message="Fetching sneakers" />
                 {sneakers && (
                     <IonList>
-                        {sneakers.map(({ _id, name, price, owned, releaseDate}) =>
-                            <SneakerItemList key={_id} _id={_id} name={name} price={price} owned={owned} releaseDate={releaseDate} onEdit={id => history.push(`/sneaker/${id}`)} />)}
+                        {sneakers.filter(it => it._id !== undefined).map(({ _id, name, price, owned, releaseDate}) =>
+                            <SneakerItemList key={_id} _id={_id} name={name} price={price} owned={owned} releaseDate={releaseDate} onEdit={id => history.push(`/sneaker/${id}`)} />
+                        )}
                     </IonList>
                 )}
                 {fetchingError && (
