@@ -1,8 +1,9 @@
 import {getLogger} from "../core";
 import PropTypes from 'prop-types';
 import {Sneaker} from "./Sneaker";
-import React, {useCallback, useEffect, useReducer} from "react";
+import React, {useCallback, useContext, useEffect, useReducer} from "react";
 import {createSneaker, getSneakers, newWebSocket, updateSneaker} from "./SneakerAPI";
+import {AuthContext} from "../auth";
 
 const log = getLogger('SneakerProvider');
 
@@ -52,7 +53,7 @@ const reducer: (state: SneakersState, action: ActionProps) => SneakersState =
             case SAVE_SNEAKER_SUCCEEDED:
                 const sneakers = [...(state.sneakers || [])];
                 const sneaker = payload.sneaker;
-                const index = sneakers.findIndex(it => it.id === sneaker.id);
+                const index = sneakers.findIndex(it => it._id === sneaker._id);
 
                 if(index === -1) {
                     sneakers.splice(0, 0, sneaker);
@@ -77,13 +78,14 @@ interface SneakerProviderProps {
 }
 
 export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
+    const { token } = useContext(AuthContext);
     const [state, dispatch] = useReducer(reducer, initialState);
     const {sneakers, fetching, fetchingError, saving, savingError} = state;
 
-    useEffect(getSneakersEffect, []);
-    useEffect(webSocketEffect, []);
+    useEffect(getSneakersEffect, [token]);
+    useEffect(webSocketEffect, [token]);
 
-    const saveSneaker = useCallback<SaveSneakerFunction>(saveSneakerCallBack, []);
+    const saveSneaker = useCallback<SaveSneakerFunction>(saveSneakerCallBack, [token]);
     const value = {sneakers, fetching, fetchingError, saving, savingError, saveSneaker};
     log('returns');
     return (
@@ -102,11 +104,14 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
         }
 
         async function fetchSneakers() {
+            if (!token?.trim()) {
+                return;
+            }
             try {
                 log('fetchSneakers started');
                 dispatch({type: FETCH_SNEAKERS_STARTED});
 
-                const sneakers = await getSneakers();
+                const sneakers = await getSneakers(token);
                 log('fetchSneakers succeeded');
                 if (!cancelled) {
                     dispatch({type: FETCH_SNEAKERS_SUCCEEDED, payload: {sneakers}});
@@ -122,7 +127,7 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
         try{
             log('saveSneaker started');
             dispatch({ type: SAVE_SNEAKER_STARTED });
-            const savedSneaker = await (sneaker.id ? updateSneaker(sneaker) : createSneaker(sneaker));
+            const savedSneaker = await (sneaker._id ? updateSneaker(token, sneaker) : createSneaker(token, sneaker));
             log('saveSneaker succeeded');
             dispatch({ type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker: savedSneaker} });
         } catch (error) {
@@ -133,20 +138,23 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
     function webSocketEffect() {
         let canceled = false;
         log('webSocketEffect - connecting');
-        const closeWebSocket = newWebSocket(message => {
-            if (canceled) {
-                return;
-            }
-            const { event, payload: { sneaker }} = message;
-            log(`web socket message, item ${event}`);
-            if (event === 'created' || event === 'updated') {
-                dispatch({ type: SAVE_SNEAKER_SUCCEEDED, payload: { sneaker } });
-            }
-        });
+        let closeWebSocket: () => void;
+        if (token?.trim()) {
+            closeWebSocket = newWebSocket(token, message => {
+                if (canceled) {
+                    return;
+                }
+                const { type, payload: sneaker } = message;
+                log(`web socket message, item ${type}`);
+                if (type === 'created' || type === 'updated') {
+                    dispatch({type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker}});
+                }
+            });
+        }
         return () => {
             log('webSocketEffect - disconnecting');
             canceled = true;
-            closeWebSocket();
+            closeWebSocket?.();
         }
     }
 };

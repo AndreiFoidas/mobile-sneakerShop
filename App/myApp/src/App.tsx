@@ -24,19 +24,23 @@ import SneakerList from "./sneaker/SneakerList";
 import SneakerEdit from "./sneaker/SneakerEdit";
 import React from "react";
 import {SneakerProvider} from "./sneaker/SneakerProvider";
+import {AuthProvider, Login, PrivateRoute} from "./auth";
 
 const App: React.FC = () => (
   <IonApp>
-      <SneakerProvider>
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route path="/sneakers" component={SneakerList} exact={true} />
-            <Route path="/sneaker" component={SneakerEdit} exact={true} />
-            <Route path="/sneaker/:id" component={SneakerEdit} exact={true} />
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <AuthProvider>
+            <Route path="/login" component={Login} exact={true}/>
+            <SneakerProvider>
+              <PrivateRoute path="/sneakers" component={SneakerList} exact={true} />
+              <PrivateRoute path="/sneaker" component={SneakerEdit} exact={true} />
+              <PrivateRoute path="/sneaker/:id" component={SneakerEdit} exact={true} />
+            </SneakerProvider>
             <Route exact path="/" render={() => <Redirect to="/sneakers" />} />
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </SneakerProvider>
+          </AuthProvider>
+        </IonRouterOutlet>
+      </IonReactRouter>
   </IonApp>
 );
 

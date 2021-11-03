@@ -32,8 +32,8 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
                 <IonLoading isOpen={fetching} message="Fetching sneakers" />
                 {sneakers && (
                     <IonList>
-                        {sneakers.map(({ id, name, price, owned, releaseDate}) =>
-                            <SneakerItemList key={id} id={id} name={name} price={price} owned={owned} releaseDate={releaseDate} onEdit={id => history.push(`/sneaker/${id}`)} />)}
+                        {sneakers.map(({ _id, name, price, owned, releaseDate}) =>
+                            <SneakerItemList key={_id} _id={_id} name={name} price={price} owned={owned} releaseDate={releaseDate} onEdit={id => history.push(`/sneaker/${id}`)} />)}
                     </IonList>
                 )}
                 {fetchingError && (

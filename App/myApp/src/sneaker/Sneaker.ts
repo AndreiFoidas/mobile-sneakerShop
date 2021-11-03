@@ -1,5 +1,5 @@
 export interface Sneaker {
-    id?: string;
+    _id?: string;
     name: string;
     price: number;
     owned: boolean;

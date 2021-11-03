@@ -33,7 +33,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     useEffect(() => {
        log('useEffect');
        const routeID = match.params.id || '';
-       const sneaker = sneakers?.find(it => it.id === routeID);
+       const sneaker = sneakers?.find(it => it._id === routeID);
        setSneaker(sneaker);
        if (sneaker){
            setName(sneaker.name);
