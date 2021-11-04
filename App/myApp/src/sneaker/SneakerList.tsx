@@ -1,6 +1,6 @@
 import {getLogger} from "../core";
 import {RouteComponentProps} from "react-router";
-import React, {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {SneakerContext} from "./SneakerProvider";
 import {
     IonContent,
@@ -16,11 +16,23 @@ import {
 } from "@ionic/react";
 import {add} from "ionicons/icons";
 import SneakerItemList from "./SneakerItemList";
+import {AuthContext} from "../auth";
+import { Network } from '@capacitor/network';
+
 
 const log = getLogger('SneakerList');
 
 const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
+    const { logout } = useContext(AuthContext);
     const {sneakers, fetching, fetchingError} = useContext(SneakerContext);
+    const [networkStatus, setNetworkStatus] = useState<boolean>(true);
+
+
+    Network.getStatus().then((status: { connected: boolean | ((prevState: boolean) => boolean); }) => setNetworkStatus(status.connected));
+    Network.addListener('networkStatusChange', (status: { connected: boolean | ((prevState: boolean) => boolean); }) => {
+        setNetworkStatus(status.connected);
+    })
+
     console.log(sneakers)
     return (
         <IonPage>
@@ -46,9 +58,19 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
                         <IonIcon icon={add} />
                     </IonFabButton>
                 </IonFab>
+                <IonFab vertical="bottom" horizontal="start" slot="fixed">
+                    <IonFabButton onClick={handleLogout}>
+                        LOGOUT
+                    </IonFabButton>
+                </IonFab>
             </IonContent>
         </IonPage>
     );
-}
+
+    function handleLogout() {
+        log("logout");
+        logout?.();
+    }
+};
 
 export default SneakerList;
