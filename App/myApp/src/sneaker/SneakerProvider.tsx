@@ -1,13 +1,15 @@
 import {getLogger} from "../core";
 import PropTypes from 'prop-types';
 import {Sneaker} from "./Sneaker";
-import React, {useCallback, useContext, useEffect, useReducer} from "react";
-import {createSneaker, getSneakers, newWebSocket, updateSneaker} from "./SneakerAPI";
+import React, {useCallback, useContext, useEffect, useReducer, useState} from "react";
+import {createSneaker, getSneakers, newWebSocket, syncData, updateSneaker} from "./SneakerAPI";
 import {AuthContext} from "../auth";
+import {Network} from "@capacitor/network";
+import {Storage} from "@capacitor/storage";
 
 const log = getLogger('SneakerProvider');
 
-type SaveSneakerFunction = (sneaker: Sneaker) => Promise<any>;
+type SaveSneakerFunction = (sneaker: any) => Promise<any>;
 
 export interface SneakersState {
     sneakers?: Sneaker[],
@@ -16,6 +18,9 @@ export interface SneakersState {
     saving: boolean,
     savingError?: Error | null,
     saveSneaker?: SaveSneakerFunction,
+    connectedNetwork?: boolean,
+    setSavedOffline?: Function,
+    savedOffline?: boolean
 }
 
 interface ActionProps {
@@ -53,6 +58,8 @@ const reducer: (state: SneakersState, action: ActionProps) => SneakersState =
             case SAVE_SNEAKER_SUCCEEDED:
                 const sneakers = [...(state.sneakers || [])];
                 const sneaker = payload.sneaker;
+                log(sneaker);
+                log(sneakers);
                 const index = sneakers.findIndex(it => it._id === sneaker._id);
 
                 if(index === -1) {
@@ -82,11 +89,16 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const {sneakers, fetching, fetchingError, saving, savingError} = state;
 
+    const [networkStatus, setNetworkStatus] = useState<boolean>(false);
+    Network.getStatus().then(status => setNetworkStatus(status.connected));
+    const [savedOffline, setSavedOffline] = useState<boolean>(false);
+    useEffect(networkEffect, [token, setNetworkStatus]);
+
     useEffect(getSneakersEffect, [token]);
     useEffect(webSocketEffect, [token]);
 
     const saveSneaker = useCallback<SaveSneakerFunction>(saveSneakerCallBack, [token]);
-    const value = {sneakers, fetching, fetchingError, saving, savingError, saveSneaker};
+    const value = {sneakers, fetching, fetchingError, saving, savingError, saveSneaker, networkStatus, savedOffline, setSavedOffline};
     log('returns');
     return (
         <SneakerContext.Provider value={value}>
@@ -94,9 +106,28 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
         </SneakerContext.Provider>
     );
 
+    function networkEffect() {
+        console.log("network effect");
+        log('network effect');
+        let canceled = false;
+        Network.addListener('networkStatusChange', async (status) => {
+            if (canceled)
+                return;
+            const connected = status.connected;
+            if (connected) {
+                alert('SYNC data');
+                log('sync data');
+                await syncData(token);
+            }
+            setNetworkStatus(status.connected);
+        });
+        return () => {
+            canceled = true;
+        }
+    }
 
     function getSneakersEffect() {
-        log('effect started')
+        log('effect started');
         let cancelled = false;
         fetchSneakers().then(r => log(r));
         return () => {
@@ -107,32 +138,86 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
             if (!token?.trim()) {
                 return;
             }
-            try {
-                log('fetchSneakers started');
-                dispatch({type: FETCH_SNEAKERS_STARTED});
+            if (!navigator?.onLine) {
+                alert("FETCHING ELEMENTS OFFLINE!");
+                let storageKeys = Storage.keys();
+                const sneakers = await storageKeys.then(async function (storageKeys) {
+                    const saved = []
+                    for (let i = 0; i < storageKeys.keys.length; i++){
+                        if (storageKeys.keys[i] !== 'token') {
+                             const sneaker = await Storage.get({key: storageKeys.keys[i]});
+                             if (sneaker.value != null)
+                                 var parsedSneaker = JSON.parse(sneaker.value);
+                             saved.push(parsedSneaker);
+                        }
+                    }
+                    return saved;
+                });
+                dispatch({type: FETCH_SNEAKERS_SUCCEEDED, payload: {sneakers: sneakers}});
+            } else {
+                try {
+                    log('fetchSneakers started');
+                    dispatch({type: FETCH_SNEAKERS_STARTED});
 
-                const sneakers = await getSneakers(token);
-                log('fetchSneakers succeeded');
-                if (!cancelled) {
-                    dispatch({type: FETCH_SNEAKERS_SUCCEEDED, payload: {sneakers}});
+                    const sneakers = await getSneakers(token);
+                    log('fetchSneakers succeeded');
+                    if (!cancelled) {
+                        dispatch({type: FETCH_SNEAKERS_SUCCEEDED, payload: {sneakers: sneakers}});
+                    }
+                } catch (error) {
+                    let storageKeys = Storage.keys();
+                    const sneakers = await storageKeys.then(async function (storageKeys) {
+                        const saved = []
+                        for (let i = 0; i < storageKeys.keys.length; i++){
+                            if (storageKeys.keys[i] !== 'token') {
+                                const sneaker = await Storage.get({key: storageKeys.keys[i]});
+                                if (sneaker.value != null)
+                                    var parsedSneaker = JSON.parse(sneaker.value);
+                                saved.push(parsedSneaker);
+                            }
+                        }
+                        return saved;
+                    });
+                    dispatch({type: FETCH_SNEAKERS_SUCCEEDED, payload: {sneakers: sneakers}});
                 }
-            } catch (error) {
-                log('fetchSneakers failed');
-                dispatch({type: FETCH_SNEAKERS_FAILED, payload: {error} });
             }
         }
     }
 
     async function saveSneakerCallBack(sneaker: Sneaker) {
-        try{
-            log('saveSneaker started');
-            dispatch({ type: SAVE_SNEAKER_STARTED });
-            const savedSneaker = await (sneaker._id ? updateSneaker(token, sneaker) : createSneaker(token, sneaker));
-            log('saveSneaker succeeded');
-            dispatch({ type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker: savedSneaker} });
+        try {
+            if (navigator.onLine) {
+                log('saveSneaker started');
+                dispatch({type: SAVE_SNEAKER_STARTED});
+                const savedSneaker = await (sneaker._id ? updateSneaker(token, sneaker) : createSneaker(token, sneaker));
+                log('saveSneaker succeeded');
+                dispatch({type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker: savedSneaker}});
+            } else {
+                alert("SAVED OFFLINE");
+                log('saveSneaker failed');
+                sneaker._id = (sneaker._id == undefined) ? ('_' + Math.random().toString(36).substr(2, 9)) : sneaker._id;
+                await Storage.set({
+                    key: sneaker._id!,
+                    value: JSON.stringify({
+                        _id: sneaker._id,
+                        name: sneaker.name,
+                        price: sneaker.price,
+                        owned: sneaker.owned,
+                        releaseDate: sneaker.releaseDate
+                    })
+                });
+                dispatch({type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker: sneaker}});
+                setSavedOffline(true);
+            }
         } catch (error) {
             log('saveSneaker failed');
-            dispatch({ type: SAVE_SNEAKER_FAILED, payload: { error } });            }
+            await Storage.set({
+                key: String(sneaker._id),
+                value: JSON.stringify(sneaker)
+            })
+            dispatch({type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker: sneaker}});
+        }
+
     }
 
     function webSocketEffect() {
@@ -147,7 +232,7 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
                 const { type, payload: sneaker } = message;
                 log(`web socket message, item ${type}`);
                 if (type === 'created' || type === 'updated') {
-                    dispatch({type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker}});
+                    dispatch({type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker: sneaker}});
                 }
             });
         }

@@ -6,3 +6,12 @@
 {"name":"alt sneaker","price":2,"owned":false,"releaseDate":"2021-11-03T11:16:48.565Z","userId":"1","_id":"6"}
 {"name":"only for b","price":10,"owned":false,"releaseDate":"2021-11-03T11:21:51.644Z","userId":"2","_id":"YE5HwpCL3bCLHWiy"}
 {"name":"only for b v2","price":100,"owned":false,"releaseDate":"2021-11-03T11:22:55.522Z","userId":"2","_id":"ZHt9I15xO1s3XO7M"}
+{"name":"sneaker 1","price":100,"owned":true,"releaseDate":"2021-11-03T11:16:48.565Z","userId":"1","_id":"1"}
+{"name":"alt sneaker","price":20,"owned":false,"releaseDate":"2021-11-03T11:16:48.565Z","userId":"1","_id":"6"}
+{"name":"incerc","price":2,"owned":false,"releaseDate":"","userId":"1","_id":"rIYpRIKsx9yB70Yv"}
+{"name":"test online","price":100,"owned":false,"releaseDate":"","userId":"1","_id":"wLYYry9wKg7EJeiV"}
+{"name":"incerc","price":2,"owned":true,"releaseDate":"","userId":"1","_id":"rIYpRIKsx9yB70Yv"}
+{"name":"test online","price":100,"owned":true,"releaseDate":"","userId":"1","_id":"wLYYry9wKg7EJeiV"}
+{"name":"sneaker 1","price":10,"owned":true,"releaseDate":"2021-11-03T11:16:48.565Z","userId":"1","_id":"1"}
+{"name":"test online","price":10,"owned":true,"releaseDate":"","userId":"1","_id":"wLYYry9wKg7EJeiV"}
+{"_id":"rIYpRIKsx9yB70Yv","name":"incerc","price":20,"owned":true,"releaseDate":"","userId":"1"}

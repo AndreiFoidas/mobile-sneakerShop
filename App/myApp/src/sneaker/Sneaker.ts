@@ -3,5 +3,5 @@ export interface Sneaker {
     name: string;
     price: number;
     owned: boolean;
-    releaseDate: Date;
+    releaseDate: string;
 }

@@ -27,7 +27,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     const [name, setName] = useState<string>('');
     const [price, setPrice] = useState<number>(0);
     const [owned, setOwned] = useState<boolean>(false);
-    const [releaseDate, setReleaseDate] = useState<Date>(new Date());
+    const [releaseDate, setReleaseDate] = useState<string>('');
     const [sneaker, setSneaker] = useState<Sneaker>()
 
     useEffect(() => {
@@ -77,7 +77,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
                 <IonLabel>Owned: </IonLabel>
                 <IonInput value={String(owned)} onIonChange={e => setOwned((e.detail.value) == "true" || (e.detail.value) == "yes")} />
                 <IonLabel>Release Date: </IonLabel>
-                <IonInput value = {String(moment(releaseDate).format('DD-MMM-YYYY HH:mm:ss'))}/>
+                <IonInput value = {releaseDate}/>
                 {/*<IonInput value={String(releaseDate)} onIonChange={e => {
                         if (e.detail.value !== undefined && e.detail.value !== null) {
                             log(new Date(e.detail.value));
