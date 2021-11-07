@@ -8,10 +8,10 @@ import {
     IonButtons,
     IonContent,
     IonHeader,
-    IonInput, IonLabel,
+    IonInput, IonItem, IonLabel,
     IonLoading,
-    IonPage,
-    IonTitle,
+    IonPage, IonSelect, IonSelectOption,
+    IonTitle, IonToggle,
     IonToolbar
 } from "@ionic/react";
 import moment from 'moment';
@@ -46,7 +46,6 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     }, [match.params.id, sneakers]);
 
     const handleSave = () => {
-        // log(name+" "+price+" "+owned);
         const editedSneaker = sneaker ? {...sneaker, name, brand, price, owned, releaseDate } : { name, brand, price, owned, releaseDate };
         log(editedSneaker)
         saveSneaker && saveSneaker(editedSneaker).then(() => history.goBack());
@@ -70,18 +69,39 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
                 </IonToolbar>
             </IonHeader>
             <IonContent>
-                <IonLabel>Name: </IonLabel>
-                <IonInput value={name} onIonChange={e => setName(e.detail.value || '')} />
-                <IonLabel>Brand: </IonLabel>
-                <IonInput value={brand} onIonChange={e => setBrand(e.detail.value || '')} />
-                <IonLabel>Price: </IonLabel>
-                <IonInput type="number" value={price} onIonChange={e => {
-                    setPrice(Number(e.detail.value) || 0)
-                }} />
-                <IonLabel>Owned: </IonLabel>
-                <IonInput value={String(owned)} onIonChange={e => setOwned((e.detail.value) == "true" || (e.detail.value) == "yes")} />
-                <IonLabel>Release Date: </IonLabel>
-                <IonInput value = {releaseDate} onIonChange={e => setReleaseDate(e.detail.value || '')}/>
+                <IonItem>
+                    <IonLabel>Name: </IonLabel>
+                    <IonInput value={name} onIonChange={e => setName(e.detail.value || '')} />
+                </IonItem>
+
+                <IonItem>
+                    <IonLabel>Brand:  </IonLabel>
+                    <IonSelect value={brand} onIonChange={e => setBrand(e.detail.value)}>
+                        <IonSelectOption value="Nike">Nike</IonSelectOption>
+                        <IonSelectOption value="Adidas">Adidas</IonSelectOption>
+                        <IonSelectOption value="New Balance">New Balance</IonSelectOption>
+                        <IonSelectOption value="Puma">Puma</IonSelectOption>
+                        <IonSelectOption value="Vans">Vans</IonSelectOption>
+                        <IonSelectOption value="Converse">Converse</IonSelectOption>
+                    </IonSelect>
+                </IonItem>
+
+                <IonItem>
+                    <IonLabel>Price: </IonLabel>
+                    <IonInput type="number" value={price} onIonChange={e => {
+                        setPrice(Number(e.detail.value) || 0)
+                    }} />
+                </IonItem>
+
+                <IonItem>
+                    <IonLabel>Owned: </IonLabel>
+                    <IonToggle checked={owned} onIonChange={e => setOwned(e.detail.checked)}/>
+                </IonItem>
+
+                <IonItem>
+                    <IonLabel>Release Date: </IonLabel>
+                    <IonInput value = {releaseDate} onIonChange={e => setReleaseDate(e.detail.value || '')}/>
+                </IonItem>
 
                 <IonLoading isOpen={saving} />
                 {savingError && (

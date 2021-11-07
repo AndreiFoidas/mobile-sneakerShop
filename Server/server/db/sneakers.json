@@ -10,3 +10,12 @@
 {"_id":"rIYpRIKsx9yB70Yv","name":"incerc","price":20,"brand":"nike","owned":true,"releaseDate":"2021-11-03","userId":"1"}
 {"_id":"wLYYry9wKg7EJeiV","name":"test offline","price":10,"brand":"nike","owned":true,"releaseDate":"2021-11-03","userId":"1"}
 {"name":"newest","brand":"adidas","price":100,"owned":false,"releaseDate":"21-10-2000","userId":"1","_id":"lTmtlr3c8tyKLf2O"}
+{"name":"newest","brand":"Adidas","price":100,"owned":false,"releaseDate":"21-10-2000","userId":"1","_id":"lTmtlr3c8tyKLf2O"}
+{"name":"sneaker 1","price":10,"brand":"Nike","owned":true,"releaseDate":"2021-11-03","userId":"1","_id":"1"}
+{"name":"sneaker 2","price":200,"brand":"Nike","owned":true,"releaseDate":"2021-11-03","userId":"1","_id":"2"}
+{"name":"alt sneaker","price":20,"brand":"Nike","owned":false,"releaseDate":"2021-11-03","userId":"1","_id":"6"}
+{"name":"sneaker 3","price":300,"brand":"Nike","owned":true,"releaseDate":"2021-11-03","userId":"1","_id":"3"}
+{"name":"still worling","price":200,"brand":"Nike","owned":false,"releaseDate":"21-10-2000","userId":"1","_id":"DiuGNLnojr3GzO6K"}
+{"_id":"rIYpRIKsx9yB70Yv","name":"incerc","price":20,"brand":"Adidas","owned":true,"releaseDate":"2021-11-03","userId":"1"}
+{"_id":"wLYYry9wKg7EJeiV","name":"test offline","price":10,"brand":"Adidas","owned":true,"releaseDate":"2021-11-03","userId":"1"}
+{"name":"brand new","brand":"Vans","price":20,"owned":true,"releaseDate":"21-10-2000","userId":"1","_id":"ZY5hJguMcCNqzJ5q"}

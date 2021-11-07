@@ -11,7 +11,7 @@ import {
     IonIcon, IonInfiniteScroll, IonInfiniteScrollContent, IonItem, IonLabel,
     IonList,
     IonLoading,
-    IonPage, IonSearchbar,
+    IonPage, IonSearchbar, IonSelect, IonSelectOption,
     IonTitle, IonToast,
     IonToolbar
 } from "@ionic/react";
@@ -23,7 +23,7 @@ import {Sneaker} from "./Sneaker";
 
 
 const log = getLogger('SneakerList');
-const offset = 5;
+const offset = 10;
 
 const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
     const { logout } = useContext(AuthContext);
@@ -43,6 +43,8 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
         setNetworkStatus(status.connected);
     })
 
+    const brands = ["All", "Nike", "Adidas", "New Balance", "Puma", "Vans", "Converse"];
+
     useEffect(() => {
         if (sneakers?.length && sneakers?.length > 0) {
             setPage(offset);
@@ -53,7 +55,12 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
 
     useEffect(() => {
         if (sneakers && filter){
-            //setVisibleItems(sneakers.filter(each -> each.))
+            if (filter === "All"){
+                setVisibleSneakers(sneakers);
+            }
+            else {
+                setVisibleSneakers(sneakers.filter(each => each.brand === filter));
+            }
         }
     }, [filter]);
 
@@ -93,6 +100,15 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
                             setSearch(e.detail.value!);
                         }}>
                         </IonSearchbar>
+                    </IonItem>
+                    <IonItem>
+                        <IonSelect style={{ width: '40%' }} value={filter} placeholder="Pick a brand" onIonChange={(e) => setFilter(e.detail.value)}>
+                            {brands.map((each) => (
+                                <IonSelectOption key={each} value={each}>
+                                    {each}
+                                </IonSelectOption>
+                            ))}
+                        </IonSelect>
                         <IonChip>
                             <IonLabel color={networkStatus? "success" : "danger"}>{networkStatus? "Online" : "Offline"}</IonLabel>
                         </IonChip>
@@ -108,8 +124,8 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
                     <IonList>
                         {Array.from(visibleSneakers)
                             .filter(each => {
-                                //if (filter !== undefined)
-                                //    return each
+                                if (filter !== undefined && filter !== "All")
+                                    return each.brand === filter && each._id !== undefined;
                                 return each._id !== undefined;
                             })
                             .map(({ _id, name, brand, price, owned, releaseDate}) =>
