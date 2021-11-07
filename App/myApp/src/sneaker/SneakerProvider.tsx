@@ -201,6 +201,7 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
                     value: JSON.stringify({
                         _id: sneaker._id,
                         name: sneaker.name,
+                        brand: sneaker.brand,
                         price: sneaker.price,
                         owned: sneaker.owned,
                         releaseDate: sneaker.releaseDate

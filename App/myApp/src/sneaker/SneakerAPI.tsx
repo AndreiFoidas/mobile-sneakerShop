@@ -17,6 +17,7 @@ export const getSneakers: (token: string) => Promise<Sneaker[]> = token => {
                     value: JSON.stringify({
                         _id: each._id,
                         name: each.name,
+                        brand: each.brand,
                         price: each.price,
                         owned: each.owned,
                         releaseDate: each.releaseDate
@@ -49,6 +50,7 @@ export const createSneaker: (token: string, sneaker: Sneaker) => Promise<Sneaker
             value: JSON.stringify({
                 _id: item._id,
                 name: item.name,
+                brand: item.brand,
                 price: item.price,
                 owned: item.owned,
                 releaseDate: item.releaseDate
@@ -78,6 +80,7 @@ export const updateSneaker: (token: string, sneaker: Sneaker) => Promise<Sneaker
             value: JSON.stringify({
                 _id: item._id,
                 name: item.name,
+                brand: item.brand,
                 price: item.price,
                 owned: item.owned,
                 releaseDate: item.releaseDate
@@ -97,7 +100,7 @@ export const updateSneaker: (token: string, sneaker: Sneaker) => Promise<Sneaker
 }
 
 const equals = (sneaker1: any, sneaker2: any) => {
-    return sneaker1.name === sneaker2.name && sneaker1.price === sneaker2.price && sneaker1.owned === sneaker2.owned && sneaker1.releaseDate === sneaker2.releaseDate;
+    return sneaker1.name === sneaker2.name && sneaker1.brand === sneaker2.brand && sneaker1.price === sneaker2.price && sneaker1.owned === sneaker2.owned && sneaker1.releaseDate === sneaker2.releaseDate;
 }
 
 // @ts-ignore

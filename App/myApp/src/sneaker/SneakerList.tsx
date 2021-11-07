@@ -112,8 +112,8 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
                                 //    return each
                                 return each._id !== undefined;
                             })
-                            .map(({ _id, name, price, owned, releaseDate}) =>
-                            <SneakerItemList key={_id} _id={_id} name={name} price={price} owned={owned} releaseDate={releaseDate} onEdit={id => history.push(`/sneaker/${id}`)} />
+                            .map(({ _id, name, brand, price, owned, releaseDate}) =>
+                            <SneakerItemList key={_id} _id={_id} name={name} brand={brand} price={price} owned={owned} releaseDate={releaseDate} onEdit={id => history.push(`/sneaker/${id}`)} />
                         )}
                     </IonList>
                 )}

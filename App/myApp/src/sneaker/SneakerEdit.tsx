@@ -25,6 +25,7 @@ interface SneakerEditProps extends RouteComponentProps<{
 const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     const {sneakers, saving, savingError, saveSneaker} = useContext(SneakerContext);
     const [name, setName] = useState<string>('');
+    const [brand, setBrand] = useState<string>('');
     const [price, setPrice] = useState<number>(0);
     const [owned, setOwned] = useState<boolean>(false);
     const [releaseDate, setReleaseDate] = useState<string>('');
@@ -37,6 +38,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
        setSneaker(sneaker);
        if (sneaker){
            setName(sneaker.name);
+           setBrand(sneaker.brand);
            setPrice(sneaker.price);
            setOwned(sneaker.owned);
            setReleaseDate(sneaker.releaseDate);
@@ -45,7 +47,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
 
     const handleSave = () => {
         // log(name+" "+price+" "+owned);
-        const editedSneaker = sneaker ? {...sneaker, name, price, owned, releaseDate } : { name, price, owned, releaseDate };
+        const editedSneaker = sneaker ? {...sneaker, name, brand, price, owned, releaseDate } : { name, brand, price, owned, releaseDate };
         log(editedSneaker)
         saveSneaker && saveSneaker(editedSneaker).then(() => history.goBack());
     };
@@ -70,6 +72,8 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
             <IonContent>
                 <IonLabel>Name: </IonLabel>
                 <IonInput value={name} onIonChange={e => setName(e.detail.value || '')} />
+                <IonLabel>Brand: </IonLabel>
+                <IonInput value={brand} onIonChange={e => setBrand(e.detail.value || '')} />
                 <IonLabel>Price: </IonLabel>
                 <IonInput type="number" value={price} onIonChange={e => {
                     setPrice(Number(e.detail.value) || 0)
