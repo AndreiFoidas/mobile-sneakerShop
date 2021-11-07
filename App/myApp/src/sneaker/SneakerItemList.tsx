@@ -1,6 +1,6 @@
 import React from "react";
 import {Sneaker} from "./Sneaker";
-import {IonItem, IonLabel} from "@ionic/react";
+import {IonCard, IonCardSubtitle, IonItem, IonLabel} from "@ionic/react";
 import moment from 'moment';
 
 interface SneakerExt extends Sneaker{
@@ -10,7 +10,10 @@ interface SneakerExt extends Sneaker{
 const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, price, owned, releaseDate, onEdit}) => {
     return (
       <IonItem onClick = {() => onEdit(_id)}>
-          <IonLabel>{name}, {price}$, owned: {owned ? "yes" : "no"}, {releaseDate}</IonLabel>
+          <IonCard>{name}</IonCard>
+          <IonCard>{price}$</IonCard>
+          <IonCard>Owned: {owned ? "yes" : "no"}</IonCard>
+          <IonCard>{releaseDate}</IonCard>
       </IonItem>
     );
 };

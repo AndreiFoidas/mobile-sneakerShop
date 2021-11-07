@@ -77,14 +77,8 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
                 <IonLabel>Owned: </IonLabel>
                 <IonInput value={String(owned)} onIonChange={e => setOwned((e.detail.value) == "true" || (e.detail.value) == "yes")} />
                 <IonLabel>Release Date: </IonLabel>
-                <IonInput value = {releaseDate}/>
-                {/*<IonInput value={String(releaseDate)} onIonChange={e => {
-                        if (e.detail.value !== undefined && e.detail.value !== null) {
-                            log(new Date(e.detail.value));
-                            setReleaseDate(new Date(e.detail.value));
-                        }
-                    }
-                } />*/}
+                <IonInput value = {releaseDate} onIonChange={e => setReleaseDate(e.detail.value || '')}/>
+
                 <IonLoading isOpen={saving} />
                 {savingError && (
                     <div>{savingError.message || 'Failed to save sneaker'}</div>
