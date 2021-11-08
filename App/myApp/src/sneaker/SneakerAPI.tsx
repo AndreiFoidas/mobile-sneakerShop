@@ -119,10 +119,10 @@ export const syncData: (token: string) => Promise<Sneaker[]> = async token => {
                     //alert('SNEAKER LOCALLY: ' + sneakerLocal.value!);
 
                     if (sneakerOnServer !== undefined && !equals(sneakerOnServer, JSON.parse(sneakerLocal.value!))){ //update
-                        alert('UPDATE ' + sneakerLocal.value);
+                        //alert('UPDATE ' + sneakerLocal.value);
                         axios.put(`${sneakerUrl}/${key}`, JSON.parse(sneakerLocal.value!), authConfig(token));
                     } else if (sneakerOnServer === undefined){ //create
-                        alert('CREATE' + sneakerLocal.value!);
+                        //alert('CREATE' + sneakerLocal.value!);
                         axios.post(`${sneakerUrl}`, JSON.parse(sneakerLocal.value!), authConfig(token));
                     } // nothing changed
                 }

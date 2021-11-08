@@ -23,7 +23,7 @@ import {Sneaker} from "./Sneaker";
 
 
 const log = getLogger('SneakerList');
-const offset = 10;
+const offset = 5;
 
 const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
     const { logout } = useContext(AuthContext);
@@ -87,10 +87,11 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
 
     async function searchNext($event: CustomEvent<void>) {
         fetchData();
+        log("pagination");
         ($event.target as HTMLIonInfiniteScrollElement).complete();
     }
 
-    console.log(sneakers)
+    // console.log(sneakers)
     return (
         <IonPage>
             <IonHeader>
