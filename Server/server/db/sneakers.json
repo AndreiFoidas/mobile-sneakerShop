@@ -1,4 +1,4 @@
-{"name":"sneaker 1","price":10,"brand":"Nike","owned":true,"releaseDate":"2021-11-03","userId":"1","_id":"1"}
+{"_id":"1","name":"sneaker 3","brand":"Puma","price":100,"owned":true,"releaseDate":"2021-11-03","userId":"1"}
 {"name":"test","brand":"Vans","price":20,"owned":true,"releaseDate":"21-10-2000","userId":"1","_id":"10"}
 {"name":"test","brand":"Vans","price":20,"owned":true,"releaseDate":"21-10-2000","userId":"1","_id":"11"}
 {"name":"test","brand":"Vans","price":20,"owned":true,"releaseDate":"21-10-2000","userId":"1","_id":"12"}
@@ -33,7 +33,7 @@
 {"name":"newest","brand":"Adidas","price":100,"owned":false,"releaseDate":"21-10-2000","userId":"1","_id":"lTmtlr3c8tyKLf2O"}
 {"_id":"rIYpRIKsx9yB70Yv","name":"incerc","price":20,"brand":"Adidas","owned":true,"releaseDate":"2021-11-03","userId":"1"}
 {"_id":"wLYYry9wKg7EJeiV","name":"test offline","price":10,"brand":"Adidas","owned":true,"releaseDate":"2021-11-03","userId":"1"}
-{"name":"sneaker 2","price":10,"brand":"Nike","owned":true,"releaseDate":"2021-11-03","userId":"1","_id":"1"}
-{"_id":"1","name":"sneaker 3","brand":"Nike","price":10,"owned":true,"releaseDate":"2021-11-03","userId":"1"}
-{"_id":"1","name":"sneaker 3","brand":"Nike","price":10,"owned":false,"releaseDate":"2021-11-03","userId":"1"}
-{"_id":"1","name":"sneaker 3","brand":"Puma","price":100,"owned":true,"releaseDate":"2021-11-03","userId":"1"}
+{"_id":"1","name":"sneaker 3","brand":"Puma","price":100,"owned":true,"releaseDate":"2021-11-03","userId":"1","latitude":53.12327605595378,"longitude":23.17223280078126}
+{"name":"test","brand":"Vans","price":20,"owned":true,"releaseDate":"21-10-2000","userId":"1","_id":"10","latitude":53.01931329412449,"longitude":24.084098035156256}
+{"_id":"1","name":"sneaker 3","brand":"Puma","price":100,"owned":true,"releaseDate":"2021-11-03","userId":"1","latitude":46.77667053401802,"longitude":23.621658335449784}
+{"name":"test","brand":"Vans","price":20,"owned":true,"releaseDate":"21-10-2000","userId":"1","_id":"11","latitude":46.74446483973049,"longitude":23.484589854020438}

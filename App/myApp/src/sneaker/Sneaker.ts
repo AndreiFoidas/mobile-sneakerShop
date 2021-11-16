@@ -5,4 +5,6 @@ export interface Sneaker {
     price: number;
     owned: boolean;
     releaseDate: string;
+    latitude?: number;
+    longitude?: number;
 }

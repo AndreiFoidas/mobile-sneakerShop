@@ -204,7 +204,9 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
                         brand: sneaker.brand,
                         price: sneaker.price,
                         owned: sneaker.owned,
-                        releaseDate: sneaker.releaseDate
+                        releaseDate: sneaker.releaseDate,
+                        latitude: sneaker.latitude,
+                        longitude: sneaker.longitude
                     })
                 });
                 dispatch({type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker: sneaker}});

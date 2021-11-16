@@ -128,9 +128,9 @@ const SneakerList: React.FC<RouteComponentProps> = ({history}) => {
                                 if (filter !== undefined && filter !== "All")
                                     return each.brand === filter && each._id !== undefined;
                                 return each._id !== undefined;
-                            })
-                            .map(({ _id, name, brand, price, owned, releaseDate}) =>
-                            <SneakerItemList key={_id} _id={_id} name={name} brand={brand} price={price} owned={owned} releaseDate={releaseDate} onEdit={id => history.push(`/sneaker/${id}`)} />
+                            }) // am schimbat din id in _id
+                            .map(({ _id, name, brand, price, owned, releaseDate, latitude, longitude}) =>
+                            <SneakerItemList key={_id} _id={_id} name={name} brand={brand} price={price} owned={owned} releaseDate={releaseDate} latitude={latitude} longitude={longitude} onEdit={id => history.push(`/sneaker/${_id}`)} />
                         )}
                     </IonList>
                 )}

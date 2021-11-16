@@ -15,6 +15,8 @@ import {
     IonToolbar
 } from "@ionic/react";
 import moment from 'moment';
+import {useMyLocation} from "../core/useMyLocation";
+import {MyMap} from "../core/MyMap";
 
 const log = getLogger('SneakerEdit');
 
@@ -31,6 +33,14 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     const [releaseDate, setReleaseDate] = useState<string>('');
     const [sneaker, setSneaker] = useState<Sneaker>()
 
+    const [latitude, setLatitude] = useState<number | undefined>(undefined);
+    const [longitude, setLongitude] = useState<number | undefined>(undefined);
+    const [currentLatitude, setCurrentLatitude] = useState<number | undefined>(undefined);
+    const [currentLongitude, setCurrentLongitude] = useState<number | undefined>(undefined);
+
+    const location = useMyLocation();
+    const {latitude : lat, longitude : long} = location.position?.coords || {};
+
     useEffect(() => {
        log('useEffect');
        const routeID = match.params.id || '';
@@ -42,16 +52,32 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
            setPrice(sneaker.price);
            setOwned(sneaker.owned);
            setReleaseDate(sneaker.releaseDate);
+           setLatitude(sneaker.latitude);
+           setLongitude(sneaker.longitude);
        }
     }, [match.params.id, sneakers]);
 
+    useEffect(() => {
+        if(latitude === undefined && longitude === undefined){
+            setCurrentLatitude(lat);
+            setCurrentLongitude(long);
+        } else {
+            setCurrentLatitude(latitude);
+            setCurrentLongitude(longitude);
+        }
+    } ,[lat, long, latitude, longitude]);
+
     const handleSave = () => {
-        const editedSneaker = sneaker ? {...sneaker, name, brand, price, owned, releaseDate } : { name, brand, price, owned, releaseDate };
-        log(editedSneaker)
+        const editedSneaker = sneaker ? {...sneaker, name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude } : { name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude };
+        console.log(editedSneaker)
         saveSneaker && saveSneaker(editedSneaker).then(() => history.goBack());
     };
     log('render');
 
+    function setLocation() {
+        setLatitude(currentLatitude);
+        setLongitude(currentLongitude);
+    }
 
     return(
         <IonPage>
@@ -103,6 +129,20 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
                     <IonInput value = {releaseDate} onIonChange={e => setReleaseDate(e.detail.value || '')}/>
                 </IonItem>
 
+                <IonItem>
+                    <IonLabel>Choose shop location:</IonLabel>
+                    <IonButton onClick={setLocation}>Set Location</IonButton>
+                </IonItem>
+
+                {lat && long &&
+                    <MyMap
+                        lat={currentLatitude}
+                        long={currentLongitude}
+                        onMapClick={log('onMapClick')}
+                        onMarkerClick={log('onMarkerClick')}
+                    />
+                }
+
                 <IonLoading isOpen={saving} />
                 {savingError && (
                     <div>{savingError.message || 'Failed to save sneaker'}</div>
@@ -110,6 +150,14 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
             </IonContent>
         </IonPage>
     );
+
+    function log(source: string){
+        return (e: any) => {
+            setCurrentLatitude(e.latLng.lat());
+            setCurrentLongitude(e.latLng.lng());
+            console.log(source, e.latLng.lat(), e.latLng.lng());
+        }
+    }
 }
 
 export default SneakerEdit;

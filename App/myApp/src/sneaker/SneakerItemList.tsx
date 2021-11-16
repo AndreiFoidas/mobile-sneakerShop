@@ -7,7 +7,7 @@ interface SneakerExt extends Sneaker{
     onEdit: (_id?: string) => void;
 }
 
-const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, brand, price, owned, releaseDate, onEdit}) => {
+const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, brand, price, owned, releaseDate, latitude, longitude, onEdit}) => {
     /*return (
       <IonItem onClick = {() => onEdit(_id)}>
           <IonCard>{name}</IonCard>
@@ -23,9 +23,10 @@ const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, brand, price, owned,
 
     return (
         <IonCard onClick = {() => onEdit(_id)} className="ion-card">
-                <IonImg src={"https://i.imgur.com/oz6nnCQ.jpg"}/>
-                <IonItem className="card-title">{brand} - {name}</IonItem>
-                <IonItem className="card-subtitle">{price}$ - Owned: {owned ? "yes" : "no"} - {releaseDate}</IonItem>
+            <IonImg src={"https://i.imgur.com/oz6nnCQ.jpg"}/>
+            <IonItem className="card-title">{brand} - {name}</IonItem>
+            <IonItem className="card-subtitle">{price}$ - Owned: {owned ? "yes" : "no"} - {releaseDate}</IonItem>
+            <IonItem>{latitude}x{longitude}</IonItem>
         </IonCard>
     );
 };
