@@ -60,19 +60,25 @@ export function usePhotoGallery() {
     const { get, set } = useStorage();
     useEffect(() => {
         const loadSaved = async () => {
-            const photosString = await get(PHOTO_STORAGE);
-            const photos = (photosString ? JSON.parse(photosString) : []) as Photo[];
-            for (let photo of photos){
-                try{
-                    const file = await readFile({
-                       path: photo.filepath,
-                       directory: Directory.Data
-                    });
-                    photo.webviewPath = `data:image/jpeg;base64,${file.data}`;
-                } catch (error) {
-                    setPhotos([]);
-                    return;
+            try {
+                const photosString = await get(PHOTO_STORAGE);
+                const photos = (photosString ? JSON.parse(photosString) : []) as Photo[];
+                for (let photo of photos) {
+                    try {
+                        const file = await readFile({
+                            path: photo.filepath,
+                            directory: Directory.Data
+                        });
+                        photo.webviewPath = `data:image/jpeg;base64,${file.data}`;
+                    } catch (error) {
+                        setPhotos([]);
+                        return;
+                    }
                 }
+            } catch (error) {
+                console.log(error);
+                setPhotos([]);
+                return;
             }
 
             setPhotos(photos);
