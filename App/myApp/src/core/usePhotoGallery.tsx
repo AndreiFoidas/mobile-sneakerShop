@@ -2,8 +2,7 @@ import { useCamera } from '@ionic/react-hooks/camera';
 import { useEffect, useState } from 'react';
 import { base64FromPath, useFilesystem } from '@ionic/react-hooks/filesystem';
 import { useStorage } from '@ionic/react-hooks/storage';
-import {  CameraPhoto, CameraResultType, CameraSource} from "@capacitor/camera";
-import {Directory} from "@capacitor/filesystem";
+import {CameraPhoto, CameraResultType, CameraSource, FilesystemDirectory } from "@capacitor/core";
 
 export interface Photo {
     filepath: string;
@@ -18,23 +17,19 @@ export function usePhotoGallery() {
 
     const takePhoto = async () => {
         try{
-            console.log("handle2");
             const cameraPhoto = await getPhoto({
                 resultType: CameraResultType.Uri,
                 source: CameraSource.Camera,
                 quality: 100
             });
-            console.log("handle3");
             const fileName = new Date().getTime() + ".jpeg";
             const savedFileImage = await savePicture(cameraPhoto, fileName);
             //alert(savedFileImage.base64Data);
             const newPhotos = [savedFileImage, ...photos];
             setPhotos(newPhotos);
             set(PHOTO_STORAGE, JSON.stringify(newPhotos));
-            console.log("handle4");
             return savedFileImage.webviewPath;
         } catch (error) {
-            console.log("handle error");
             console.log(error)
             return '';
         }
@@ -47,7 +42,7 @@ export function usePhotoGallery() {
         await writeFile({
             path: fileName,
             data: base64Data,
-            directory: Directory.Data,
+            directory: FilesystemDirectory.Data,
             recursive: true
         });
 
@@ -67,7 +62,7 @@ export function usePhotoGallery() {
                     try {
                         const file = await readFile({
                             path: photo.filepath,
-                            directory: Directory.Data
+                            directory: FilesystemDirectory.Data
                         });
                         photo.webviewPath = `data:image/jpeg;base64,${file.data}`;
                     } catch (error) {
@@ -93,7 +88,7 @@ export function usePhotoGallery() {
       const filename = photo.filepath.substr(photo.filepath.lastIndexOf('/') + 1);
       await deleteFile({
           path: filename,
-          directory: Directory.Data
+          directory: FilesystemDirectory.Data
       });
 
       setPhotos(newPhotos);

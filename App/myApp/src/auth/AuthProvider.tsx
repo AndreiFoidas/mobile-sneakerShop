@@ -2,9 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { getLogger } from '../core';
 import { login as loginApi } from './authAPI';
-import { Storage } from "@capacitor/storage";
+import { Plugins } from "@capacitor/core";
 
 const log = getLogger('AuthProvider');
+const { Storage } = Plugins;
 
 type LoginFunction = (username?: string, password?: string) => void;
 type LogoutFunction = () => void;

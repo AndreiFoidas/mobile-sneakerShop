@@ -4,10 +4,11 @@ import {Sneaker} from "./Sneaker";
 import React, {useCallback, useContext, useEffect, useReducer, useState} from "react";
 import {createSneaker, getSneakers, newWebSocket, syncData, updateSneaker} from "./SneakerAPI";
 import {AuthContext} from "../auth";
-import {Network} from "@capacitor/network";
-import {Storage} from "@capacitor/storage";
+//import {Network} from "@capacitor/network";
+import { Plugins } from "@capacitor/core";
 
 const log = getLogger('SneakerProvider');
+const { Storage } = Plugins;
 
 type SaveSneakerFunction = (sneaker: any) => Promise<any>;
 
@@ -83,6 +84,8 @@ export const SneakerContext = React.createContext<SneakersState>(initialState);
 interface SneakerProviderProps {
     children: PropTypes.ReactNodeLike,
 }
+
+const {Network} = Plugins;
 
 export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
     const { token } = useContext(AuthContext);

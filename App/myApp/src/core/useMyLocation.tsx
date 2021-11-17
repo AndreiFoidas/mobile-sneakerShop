@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { GeolocationPosition, Geolocation } from '@capacitor/geolocation';
+import { GeolocationPosition, Plugins } from '@capacitor/core';
+
+const { Geolocation } = Plugins;
 
 interface MyLocation {
     position?: GeolocationPosition;

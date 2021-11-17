@@ -5,12 +5,12 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
-defineCustomElements(window);
-
 ReactDOM.render(
     <App />,
   document.getElementById('root')
 );
+
+defineCustomElements(window);
 
 
 // If you want your app to work offline and load faster, you can change

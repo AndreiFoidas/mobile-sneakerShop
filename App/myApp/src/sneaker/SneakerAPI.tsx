@@ -1,9 +1,10 @@
 import axios from 'axios';
 import {authConfig, baseUrl, getLogger, withLogs} from "../core";
 import {Sneaker} from "./Sneaker";
-import { Storage } from '@capacitor/storage'
+import { Plugins} from '@capacitor/core';
 
 const sneakerUrl = `http://${baseUrl}/api/sneaker`;
+const { Storage } = Plugins;
 
 // @ts-ignore
 export const getSneakers: (token: string) => Promise<Sneaker[]> = token => {

@@ -18,7 +18,7 @@ import {
 import {add} from "ionicons/icons";
 import SneakerItemList from "./SneakerItemList";
 import {AuthContext} from "../auth";
-import { Network } from '@capacitor/network';
+import { Network } from '@capacitor/core';
 import {Sneaker} from "./Sneaker";
 
 

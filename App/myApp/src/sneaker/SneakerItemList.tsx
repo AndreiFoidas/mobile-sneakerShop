@@ -23,18 +23,6 @@ const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, brand, price, owned,
 
     const [showModal, setShowModal] = useState(false);
 
-    useEffect(() => {
-        document.getElementById("image")!.addEventListener('mouseenter', () =>{
-            setShowModal(true);
-        });
-    }, [document.getElementById("image")]);
-
-    useEffect(() => {
-        document.getElementById("item")!.addEventListener('click', () => {
-            onEdit(_id);
-        });
-    }, [document.getElementById("item")]);
-
     const enterAnimation = (baseElement: any) => {
         const backdropAnimation = createAnimation()
             .addElement(baseElement.querySelector('ion-backdrop')!)
@@ -55,17 +43,19 @@ const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, brand, price, owned,
     }
 
     return (
-        <IonCard id="item">
-            {webViewPath && (<img id="image" src={webViewPath} onClick={() => setShowModal(true)} />)}
-            {!webViewPath && (<img id="image" src={'https://static.thenounproject.com/png/187803-200.png'} onClick={() => setShowModal(true)}/>)}
+        <IonCard>
+        <IonCard onClick={ () => onEdit(_id) }>
+            {webViewPath && (<img id="image" src={webViewPath} />)}
+            {!webViewPath && (<img id="image" src={'https://static.thenounproject.com/png/187803-200.png'} />)}
             <IonModal isOpen={showModal} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation} backdropDismiss={true} onDidDismiss={() => setShowModal(false)}>
-                {webViewPath && <img id="image" src={webViewPath} />}
-                {!webViewPath && <img id="image" src={'https://static.thenounproject.com/png/187803-200.png'} />}
+                {webViewPath && <img id="image" src={webViewPath} width={'100px'} height={'100px'}/>}\
+                {!webViewPath && <img id="image" src={'https://static.thenounproject.com/png/187803-200.png'} width={'100px'} height={'100px'}/>}
             </IonModal>
 
             <IonItem className="card-title">{brand} - {name}</IonItem>
             <IonItem className="card-subtitle">{price}$ - Owned: {owned ? "yes" : "no"} - {releaseDate}</IonItem>
             <IonItem>{latitude}x{longitude}</IonItem>
+        </IonCard><IonItem onClick={() => setShowModal(true)}>Show photo</IonItem>
         </IonCard>
     );
 };
