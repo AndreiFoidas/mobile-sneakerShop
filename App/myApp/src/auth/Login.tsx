@@ -4,6 +4,7 @@ import { RouteComponentProps } from 'react-router';
 import { IonButton, IonContent, IonHeader, IonInput, IonLoading, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { AuthContext } from './AuthProvider';
 import { getLogger } from '../core';
+import AnimationDemo from "./AnimationDemo";
 
 const log = getLogger('Login');
 
@@ -15,10 +16,18 @@ interface LoginState {
 export const Login: React.FC<RouteComponentProps> = ({history}) => {
     const { isAuthenticated, isAuthenticating, login, authenticationError } = useContext(AuthContext);
     const [state, setState] = useState<LoginState>({});
+    const [showValidationError, setShowValidationError] = useState(false);
+
     const { username, password } = state;
     const handleLogin = () => {
         log('handleLogin...');
-        login?.(username, password);
+        //login?.(username, password);
+        if(!username || !password){
+            setShowValidationError(true);
+        } else {
+            setShowValidationError(false);
+            login?.(username, password);
+        }
     };
     log('render');
     if (isAuthenticated) {
@@ -32,21 +41,33 @@ export const Login: React.FC<RouteComponentProps> = ({history}) => {
                     <IonTitle>Login</IonTitle>
                 </IonToolbar>
             </IonHeader>
-            <IonContent>
+            <IonContent className="ion-padding ion-text-center">
                 <IonInput
                     placeholder="Username"
                     value={username}
                     onIonChange={e => setState({...state, username: e.detail.value || ''})}/>
+
                 <IonInput
                     type="password"
                     placeholder="Password"
                     value={password}
                     onIonChange={e => setState({...state, password: e.detail.value || ''})}/>
+
                 <IonLoading isOpen={isAuthenticating}/>
-                {authenticationError && (
-                    <div>{authenticationError.message || 'Failed to authenticate'}</div>
-                )}
                 <IonButton onClick={handleLogin}>Login</IonButton>
+
+                {showValidationError &&
+                <AnimationDemo allMandatory="All fields are mandatory!"
+                               usernameMandatory={username? "username : checked" : "enter username"}
+                               passwordMandatory={showValidationError && password? "password : checked":"enter password"}
+                               authFailed={undefined}
+                               wrong={undefined}/>
+                }
+
+                {authenticationError && !showValidationError &&
+                <AnimationDemo allMandatory="" usernameMandatory={undefined} passwordMandatory={undefined} authFailed="Authentication failed!" wrong="Wrong credentials!" />
+                }
+
             </IonContent>
         </IonPage>
     );

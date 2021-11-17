@@ -1,6 +1,6 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Sneaker} from "./Sneaker";
-import {IonCard, IonCardSubtitle, IonContent, IonImg, IonItem, IonLabel} from "@ionic/react";
+import {createAnimation, IonCard, IonCardSubtitle, IonContent, IonImg, IonItem, IonLabel, IonModal} from "@ionic/react";
 import moment from 'moment';
 
 interface SneakerExt extends Sneaker{
@@ -21,10 +21,48 @@ const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, brand, price, owned,
     <IonImg src={"https://i.imgur.com/oz6nnCQ.jpg"}/>
      */
 
+    const [showModal, setShowModal] = useState(false);
+
+    useEffect(() => {
+        document.getElementById("image")!.addEventListener('mouseenter', () =>{
+            setShowModal(true);
+        });
+    }, [document.getElementById("image")]);
+
+    useEffect(() => {
+        document.getElementById("item")!.addEventListener('click', () => {
+            onEdit(_id);
+        });
+    }, [document.getElementById("item")]);
+
+    const enterAnimation = (baseElement: any) => {
+        const backdropAnimation = createAnimation()
+            .addElement(baseElement.querySelector('ion-backdrop')!)
+            .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+
+        const wrapperAnimation = createAnimation()
+            .addElement(baseElement.querySelector('.modal-wrapper')!)
+            .keyframes([
+                { offset: 0, opacity: '0', transform: 'scale(0)' },
+                { offset: 1, opacity: '0.99', transform: 'scale(1)' }
+            ]);
+
+        return createAnimation().addElement(baseElement).easing('ease-out').duration(500).addAnimation([backdropAnimation, wrapperAnimation]);
+    }
+
+    const leaveAnimation = (baseElement: any) => {
+        return enterAnimation(baseElement).direction('reverse');
+    }
+
     return (
-        <IonCard onClick = {() => onEdit(_id)} className="ion-card">
-            {webViewPath && (<img src={webViewPath}/>)}
-            {!webViewPath && (<img src={'https://static.thenounproject.com/png/187803-200.png'}/>)}
+        <IonCard id="item">
+            {webViewPath && (<img id="image" src={webViewPath} onClick={() => setShowModal(true)} />)}
+            {!webViewPath && (<img id="image" src={'https://static.thenounproject.com/png/187803-200.png'} onClick={() => setShowModal(true)}/>)}
+            <IonModal isOpen={showModal} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation} backdropDismiss={true} onDidDismiss={() => setShowModal(false)}>
+                {webViewPath && <img id="image" src={webViewPath} />}
+                {!webViewPath && <img id="image" src={'https://static.thenounproject.com/png/187803-200.png'} />}
+            </IonModal>
+
             <IonItem className="card-title">{brand} - {name}</IonItem>
             <IonItem className="card-subtitle">{price}$ - Owned: {owned ? "yes" : "no"} - {releaseDate}</IonItem>
             <IonItem>{latitude}x{longitude}</IonItem>
