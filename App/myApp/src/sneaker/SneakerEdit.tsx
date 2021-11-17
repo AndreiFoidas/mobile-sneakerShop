@@ -1,4 +1,4 @@
-import {getLogger} from "../core";
+import {getLogger, withLogs} from "../core";
 import {RouteComponentProps} from "react-router";
 import React, {useContext, useEffect, useState} from "react";
 import {SneakerContext} from "./SneakerProvider";
@@ -17,6 +17,7 @@ import {
 import moment from 'moment';
 import {useMyLocation} from "../core/useMyLocation";
 import {MyMap} from "../core/MyMap";
+import {usePhotoGallery} from "../core/usePhotoGallery";
 
 const log = getLogger('SneakerEdit');
 
@@ -37,9 +38,12 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     const [longitude, setLongitude] = useState<number | undefined>(undefined);
     const [currentLatitude, setCurrentLatitude] = useState<number | undefined>(undefined);
     const [currentLongitude, setCurrentLongitude] = useState<number | undefined>(undefined);
+    const [webViewPath, setWebViewPath] = useState('');
 
     const location = useMyLocation();
     const {latitude : lat, longitude : long} = location.position?.coords || {};
+
+    const {takePhoto} = usePhotoGallery();
 
     useEffect(() => {
        log('useEffect');
@@ -54,6 +58,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
            setReleaseDate(sneaker.releaseDate);
            setLatitude(sneaker.latitude);
            setLongitude(sneaker.longitude);
+           setWebViewPath(sneaker.webViewPath);
        }
     }, [match.params.id, sneakers]);
 
@@ -68,11 +73,21 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     } ,[lat, long, latitude, longitude]);
 
     const handleSave = () => {
-        const editedSneaker = sneaker ? {...sneaker, name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude } : { name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude };
+        const editedSneaker = sneaker ? {...sneaker, name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude } : { name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude, webViewPath: webViewPath };
         console.log(editedSneaker)
         saveSneaker && saveSneaker(editedSneaker).then(() => history.goBack());
     };
     log('render');
+
+    async function handlePhotoChange(){
+        console.log("handle1");
+        const image = await takePhoto();
+        if(!image){
+            setWebViewPath('');
+        } else {
+            setWebViewPath(image);
+        }
+    }
 
     function setLocation() {
         setLatitude(currentLatitude);
@@ -133,6 +148,9 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
                     <IonLabel>Choose shop location:</IonLabel>
                     <IonButton onClick={setLocation}>Set Location</IonButton>
                 </IonItem>
+
+                {webViewPath && (<img onClick={handlePhotoChange} src={webViewPath} width={'100px'} height={'100px'}/>)}
+                {!webViewPath && (<img onClick={handlePhotoChange} src={'https://static.thenounproject.com/png/187803-200.png'} width={'100px'} height={'100px'}/>)}
 
                 {lat && long &&
                     <MyMap

@@ -37,3 +37,5 @@
 {"name":"test","brand":"Vans","price":20,"owned":true,"releaseDate":"21-10-2000","userId":"1","_id":"10","latitude":53.01931329412449,"longitude":24.084098035156256}
 {"_id":"1","name":"sneaker 3","brand":"Puma","price":100,"owned":true,"releaseDate":"2021-11-03","userId":"1","latitude":46.77667053401802,"longitude":23.621658335449784}
 {"name":"test","brand":"Vans","price":20,"owned":true,"releaseDate":"21-10-2000","userId":"1","_id":"11","latitude":46.74446483973049,"longitude":23.484589854020438}
+{"_id":"1","name":"sneaker 3","brand":"Puma","price":100,"owned":true,"releaseDate":"2021-11-03","userId":"1","latitude":53.109793513649386,"longitude":23.195938120606034}
+{"_id":"1","name":"sneaker 3","brand":"Puma","price":100,"owned":true,"releaseDate":"2021-11-03","userId":"1","latitude":53.21411951669904,"longitude":22.762699527210234}

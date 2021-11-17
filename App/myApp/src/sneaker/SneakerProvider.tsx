@@ -206,7 +206,8 @@ export const SneakerProvider: React.FC<SneakerProviderProps> = ({children}) => {
                         owned: sneaker.owned,
                         releaseDate: sneaker.releaseDate,
                         latitude: sneaker.latitude,
-                        longitude: sneaker.longitude
+                        longitude: sneaker.longitude,
+                        webviewPath: sneaker.webViewPath
                     })
                 });
                 dispatch({type: SAVE_SNEAKER_SUCCEEDED, payload: {sneaker: sneaker}});

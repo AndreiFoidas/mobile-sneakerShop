@@ -22,7 +22,8 @@ export const getSneakers: (token: string) => Promise<Sneaker[]> = token => {
                         owned: each.owned,
                         releaseDate: each.releaseDate,
                         latitude: each.latitude,
-                        longitude: each.longitude
+                        longitude: each.longitude,
+                        webViewPath: each.webViewPath
                     })
                 })
             }
@@ -57,7 +58,8 @@ export const createSneaker: (token: string, sneaker: Sneaker) => Promise<Sneaker
                 owned: item.owned,
                 releaseDate: item.releaseDate,
                 latitude: item.latitude,
-                longitude: item.longitude
+                longitude: item.longitude,
+                webViewPath: item.webViewPath
             })
         })
     }).catch(err => {
@@ -89,7 +91,8 @@ export const updateSneaker: (token: string, sneaker: Sneaker) => Promise<Sneaker
                 owned: item.owned,
                 releaseDate: item.releaseDate,
                 latitude: item.latitude,
-                longitude: item.longitude
+                longitude: item.longitude,
+                webViewPath: item.webViewPath
             })
         }).catch(err => {
             if (err.response) {

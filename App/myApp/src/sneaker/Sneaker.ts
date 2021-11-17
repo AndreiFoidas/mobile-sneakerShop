@@ -7,4 +7,5 @@ export interface Sneaker {
     releaseDate: string;
     latitude?: number;
     longitude?: number;
+    webViewPath: string;
 }

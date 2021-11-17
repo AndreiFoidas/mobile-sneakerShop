@@ -4,13 +4,16 @@
   "private": true,
   "dependencies": {
     "@capacitor/app": "^1.0.5",
-    "@capacitor/core": "3.2.5",
+    "@capacitor/camera": "^1.2.0",
+    "@capacitor/core": "^3.3.1",
+    "@capacitor/filesystem": "^1.0.6",
     "@capacitor/haptics": "1.1.2",
     "@capacitor/keyboard": "1.1.2",
     "@capacitor/network": "^1.0.6",
     "@capacitor/status-bar": "1.0.5",
-    "@capacitor/storage": "^1.2.3",
+    "@ionic/pwa-elements": "^3.0.2",
     "@ionic/react": "^5.5.0",
+    "@ionic/react-hooks": "0.0.8",
     "@ionic/react-router": "^5.5.0",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
@@ -70,7 +73,7 @@
     ]
   },
   "devDependencies": {
-    "@capacitor/cli": "3.2.5"
+    "@capacitor/cli": "^3.3.1"
   },
   "description": "An Ionic project"
 }
