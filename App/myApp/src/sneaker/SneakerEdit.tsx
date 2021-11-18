@@ -73,7 +73,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     } ,[lat, long, latitude, longitude]);
 
     const handleSave = () => {
-        const editedSneaker = sneaker ? {...sneaker, name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude } : { name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude, webViewPath: webViewPath };
+        const editedSneaker = sneaker ? {...sneaker, name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude, webViewPath: webViewPath } : { name, brand, price, owned, releaseDate, latitude: latitude, longitude: longitude, webViewPath: webViewPath };
         console.log(editedSneaker)
         saveSneaker && saveSneaker(editedSneaker).then(() => history.goBack());
     };
@@ -82,6 +82,7 @@ const SneakerEdit: React.FC<SneakerEditProps> = ({history, match}) => {
     async function handlePhotoChange(){
         console.log("handle1");
         const image = await takePhoto();
+        //console.log(image);
         if(!image){
             setWebViewPath('');
         } else {

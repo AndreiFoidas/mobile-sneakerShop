@@ -48,8 +48,8 @@ const SneakerItemList: React.FC<SneakerExt> = ({ _id, name, brand, price, owned,
             {webViewPath && (<img id="image" src={webViewPath} />)}
             {!webViewPath && (<img id="image" src={'https://static.thenounproject.com/png/187803-200.png'} />)}
             <IonModal isOpen={showModal} enterAnimation={enterAnimation} leaveAnimation={leaveAnimation} backdropDismiss={true} onDidDismiss={() => setShowModal(false)}>
-                {webViewPath && <img id="image" src={webViewPath} width={'100px'} height={'100px'}/>}\
-                {!webViewPath && <img id="image" src={'https://static.thenounproject.com/png/187803-200.png'} width={'100px'} height={'100px'}/>}
+                {webViewPath && <img id="image" src={webViewPath}/>}\
+                {!webViewPath && <img id="image" src={'https://static.thenounproject.com/png/187803-200.png'}/>}
             </IonModal>
 
             <IonItem className="card-title">{brand} - {name}</IonItem>
